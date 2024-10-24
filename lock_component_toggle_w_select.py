@@ -3,16 +3,15 @@ import NXOpen.UF
 import NXOpen.Assemblies
 import os
 
-def main():
-    theSession = NXOpen.Session.GetSession()
-    workPart = theSession.Parts.Work
-    theUFSession = NXOpen.UF.UFSession.GetUFSession()
-    theUI = NXOpen.UI.GetUI()
-    msgbox = NXOpen.UF.UFSession.GetUFSession()
-    lw = theSession.ListingWindow
-    lw.Open()
+theSession = NXOpen.Session.GetSession()
+workPart = theSession.Parts.Work
+theUFSession = NXOpen.UF.UFSession.GetUFSession()
+theUI = NXOpen.UI.GetUI()
+msgbox = NXOpen.UF.UFSession.GetUFSession()
+lw = theSession.ListingWindow
 
-    part = workPart.FullPath
+def main():
+    lw.Open()
 
     def select_components(title:str):
         scope = NXOpen.Selection.SelectionScope.AnyInAssembly

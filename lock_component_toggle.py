@@ -2,11 +2,11 @@
 import NXOpen.UF
 import os
 
-def main():
-    theSession = NXOpen.Session.GetSession()
-    workPart = theSession.Parts.Work
-    msgbox = NXOpen.UF.UFSession.GetUFSession()
+theSession = NXOpen.Session.GetSession()
+workPart = theSession.Parts.Work
+msgbox = NXOpen.UF.UFSession.GetUFSession()
 
+def main():
     part = workPart.FullPath
 
     if os.access(part, os.W_OK):

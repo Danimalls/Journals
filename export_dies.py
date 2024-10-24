@@ -3,15 +3,17 @@ import NXOpen
 import NXOpen.UF
 import NXOpen.Assemblies
 
+theSession = NXOpen.Session.GetSession()
+workPart = theSession.Parts.Work
+displayPart = theSession.Parts.Display
+theUFSession = NXOpen.UF.UFSession.GetUFSession()
+lw = theSession.ListingWindow
+
 def main():
-    theSession = NXOpen.Session.GetSession()
-    workPart = theSession.Parts.Work
-    displayPart = theSession.Parts.Display
-    theUFSession = NXOpen.UF.UFSession.GetUFSession()
-    lw = theSession.ListingWindow
     lw.Open()
 
     all_binder_assemblies = []
+    # Find body's owning component for filtering
     def findParent(comp):
         parent_comp = comp.OwningComponent
         parent_comp_name = parent_comp.Name
@@ -21,6 +23,7 @@ def main():
 
         return parent_comp, parent_comp_name
 
+    # Cycle all bodies in part and filter them based on component names
     def AskAllBodies(thePart, op, die_ref):
         current_die_directory = os.path.dirname(theSession.Parts.Work.FullPath)
         NULLTAG = 0
@@ -69,6 +72,7 @@ def main():
                         the_bodies.append(nxBody)
             objectTag = theUFSession.Obj.CycleObjsInPart(thePart.Tag, NXOpen.UF.UFConstants.UF_solid_type, objectTag)
 
+        # Binder specific export for OP 20s
         the_binder_bodies = []
         if op == "OP20" and die_ref == "lower":
             if len(all_binder_assemblies) > 0 :

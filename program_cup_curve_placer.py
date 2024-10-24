@@ -5,14 +5,15 @@ import NXOpen.Features
 import NXOpen.Assemblies
 import NXOpen.Positioning
 
+# session variables
+theSession = NXOpen.Session.GetSession()
+theUFSession = NXOpen.UF.UFSession.GetUFSession()
+workPart = theSession.Parts.Work
+displayPart = theSession.Parts.Display
+theUI = NXOpen.UI.GetUI()
+lw = theSession.ListingWindow
+
 def main():
-    # session variables
-    theSession = NXOpen.Session.GetSession()
-    theUFSession = NXOpen.UF.UFSession.GetUFSession()
-    workPart = theSession.Parts.Work
-    displayPart = theSession.Parts.Display
-    theUI = NXOpen.UI.GetUI()
-    lw = theSession.ListingWindow
     lw.Open()
 
     def select_components(title:str):
@@ -36,6 +37,7 @@ def main():
     except FileNotFoundError:
         all_curves = []
     check_curves = []
+    # Find Tri-Axis curves
     for curve in all_curves:
         if "front" in curve.lower() and "path" in curve.lower():
             front_path_curve = curve
@@ -50,6 +52,7 @@ def main():
             rear_theo_curve = curve
             check_curves.append(rear_theo_curve)
 
+    # If no Tri-Axis curves, select crossbar curve to use
     if len(check_curves) == 0:    
         curve_to_use = select_components("Select Cup Curve")[0]
         if "curve" in curve_to_use.Name.lower() or "f-line" in curve_to_use.Name.lower():
@@ -77,6 +80,7 @@ def main():
             theUFSession.Ui.DisplayMessage("Invalid curve selected", 1)
             return
 
+    # Tri-Axis curve adding
     else:
         default_matrix = NXOpen.Matrix3x3()
         default_matrix.Xx = 1.0
